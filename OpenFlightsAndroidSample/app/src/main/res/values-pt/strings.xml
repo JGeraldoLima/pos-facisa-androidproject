@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">OpenFlightsAndroidSample</string>
+    <string name="country_name">Brasil - BR</string>
+    <string name="msg_no_airports_found">Não foram encontrados aeroportos com estas informações!</string>
+    <string name="airport_search_hint">Procure pelo nome do país . . .</string>
+</resources>

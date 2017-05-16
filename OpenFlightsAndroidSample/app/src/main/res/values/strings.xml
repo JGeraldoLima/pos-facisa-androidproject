@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">OpenFlightsAndroidSample</string>
+    <string name="country_name">Brazil - BR</string>
+    <string name="airport_name" translatable="false">Hollister Municipal Airport</string>
+    <string name="msg_no_airports_found">No airports found with these data!</string>
+    <string name="airport_search_hint">Search by country name . . .</string>
+</resources>
