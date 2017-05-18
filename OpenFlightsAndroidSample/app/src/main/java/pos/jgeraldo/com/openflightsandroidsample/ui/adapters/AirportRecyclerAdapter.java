@@ -48,7 +48,7 @@ public class AirportRecyclerAdapter extends RecyclerView.Adapter<AirportRecycler
     public void onBindViewHolder(AirportRecyclerAdapter.ViewHolder holder, int position) {
         AirportGson airport = mAirports.get(position);
         holder.tvAirportName.setText(airport.shortName);
-        holder.tvAirportCountry.setText(String.format("%s - %s", airport.countryName, airport.countryCode));
+        holder.tvAirportCountry.setText(String.format("%s - %s", airport.city, airport.countryName));
     }
 
     @Override

@@ -18,10 +18,9 @@ public class AirportsParser {
 
     static String baseUrl = "https://openflights.org/php/apsearch.php";
 
-    public static List<AirportGson> searchAirports(String airportName, String cityName, String countryName, String
-        countryCode) throws IOException {
+    public static List<AirportGson> searchAirports(String airportName, String cityName, String countryName) throws IOException {
 
-        RequestBody body = getFormData("", airportName, cityName, countryName, countryCode, "0");
+        RequestBody body = getFormData("", airportName, cityName, countryName, "0");
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
@@ -39,7 +38,7 @@ public class AirportsParser {
     }
 
     private static RequestBody getFormData(String airportId, String airportName, String cityName, String countryName,
-                                           String countryCode, String offset) {
+                                           String offset) {
 
         // TODO: use offset property to load more items
         // TODO: figure out how to load items by max qnty instead of page index (offset)
@@ -48,7 +47,6 @@ public class AirportsParser {
             .add("name", airportName)
             .add("city", cityName)
             .add("country", countryName)
-            .add("code", countryCode)
             .add("iata", "")
             .add("dst", "N")
             .add("db", "airports")

@@ -19,9 +19,6 @@ public class AirportGson {
     @SerializedName("country")
     public String countryName;
 
-    @SerializedName("code")
-    public String countryCode;
-
     @SerializedName("iata")
     public String iataCode;
 

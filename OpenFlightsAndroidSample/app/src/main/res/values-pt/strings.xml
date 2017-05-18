@@ -4,4 +4,12 @@
     <string name="country_name">Brasil - BR</string>
     <string name="msg_no_airports_found">Não foram encontrados aeroportos com estas informações!</string>
     <string name="airport_search_hint">Procure pelo nome do país . . .</string>
+    <string name="searching_airports_message">Carregando aeroportos . . .</string>
+    <string name="airports_list_welcome_msg">Deslize para a esquerda para adicionar um filtro de busca e encontre aeroportos!</string>
+    <string name="filter_dialog_title">Filtro</string>
+    <string name="cancel">Cancelar</string>
+    <string name="filter_dialog_input_airport_name">Nome. Ex.: Congonhas</string>
+    <string name="filter_dialog_input_airport_country">País (em inglês). Ex.: Brazil</string>
+    <string name="filter_dialog_input_airport_city">Cidade. Ex.: São Paulo</string>
+    <string name="filter_dialog_positive_text">Aplicar</string>
 </resources>

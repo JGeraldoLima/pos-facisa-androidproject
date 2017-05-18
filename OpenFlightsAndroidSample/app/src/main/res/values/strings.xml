@@ -4,4 +4,14 @@
     <string name="airport_name" translatable="false">Hollister Municipal Airport</string>
     <string name="msg_no_airports_found">No airports found with these data!</string>
     <string name="airport_search_hint">Search by country name . . .</string>
+    <string name="searching_airports_message">Loading airports . . .</string>
+    <string name="airports_list_welcome_msg">Swipe left to filter search data and find airports!</string>
+
+    <string name="filter_dialog_title">Filter</string>
+    <string name="filter_dialog_positive_text">Apply</string>
+    <string name="cancel">Cancel</string>
+    <string name="filter_dialog_input_airport_name">Name. Ex.: Congonhas</string>
+    <string name="filter_dialog_input_airport_country">Country (in English). Ex: Brazil</string>
+    <string name="filter_dialog_input_airport_city">City. Ex.: São Paulo</string>
+
 </resources>
