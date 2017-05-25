@@ -4,10 +4,14 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-import pos.jgeraldo.com.openflightsandroidsample.storage.models.AirportGson;
+import pos.jgeraldo.com.openflightsandroidsample.storage.models.Airport;
 
 public class AirportSearchResult {
 
     @SerializedName("airports")
-    List<AirportGson> airports;
+    List<Airport> airports;
+
+    @SerializedName("max")
+    int maxQnty;
+
 }

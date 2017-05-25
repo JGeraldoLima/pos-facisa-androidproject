@@ -9,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +21,8 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
+import org.parceler.Parcels;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -30,7 +31,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import pos.jgeraldo.com.openflightsandroidsample.R;
 import pos.jgeraldo.com.openflightsandroidsample.http.AirportsParser;
-import pos.jgeraldo.com.openflightsandroidsample.storage.models.AirportGson;
+import pos.jgeraldo.com.openflightsandroidsample.storage.models.Airport;
 import pos.jgeraldo.com.openflightsandroidsample.ui.adapters.AirportRecyclerAdapter;
 
 public class AirportsListFragment extends Fragment {
@@ -51,7 +52,7 @@ public class AirportsListFragment extends Fragment {
     @BindView(R.id.tvAirportsList)
     TextView tvAirportsList;
 
-    List<AirportGson> mAirports;
+    List<Airport> mAirports;
 
     private MaterialDialog searchFilterDialog;
 
@@ -71,10 +72,8 @@ public class AirportsListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_airport_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_airports_list, container, false);
         ButterKnife.bind(this, view);
-
-
 
         if (mAirports != null) {
             updateList();
@@ -82,7 +81,7 @@ public class AirportsListFragment extends Fragment {
         return view;
     }
 
-    private class AirportSearchTask extends AsyncTask<String, Void, List<AirportGson>> {
+    private class AirportSearchTask extends AsyncTask<String, Void, List<Airport>> {
 
         private ProgressDialog progressDialog;
 
@@ -98,7 +97,7 @@ public class AirportsListFragment extends Fragment {
         }
 
         @Override
-        protected List<AirportGson> doInBackground(String... params) {
+        protected List<Airport> doInBackground(String... params) {
             try {
                 return AirportsParser.searchAirports(params[0], params[1], params[2]);
             } catch (IOException e) {
@@ -108,7 +107,7 @@ public class AirportsListFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(List<AirportGson> airports) {
+        protected void onPostExecute(List<Airport> airports) {
             super.onPostExecute(airports);
 
             try {
@@ -145,8 +144,8 @@ public class AirportsListFragment extends Fragment {
         }
 
         @Override
-        protected void onCancelled(List<AirportGson> airportGsons) {
-            super.onCancelled(airportGsons);
+        protected void onCancelled(List<Airport> airports) {
+            super.onCancelled(airports);
             try {
                 progressDialog.dismiss();
             } catch (Exception e) {
@@ -160,7 +159,15 @@ public class AirportsListFragment extends Fragment {
         AirportRecyclerAdapter adapter = new AirportRecyclerAdapter(mAirports, new AirportRecyclerAdapter
             .OnAirportClickListener() {
             @Override
-            public void onAirportClick(AirportGson airport) {
+            public void onAirportClick(Airport airport) {
+                Bundle arguments = new Bundle();
+                arguments.putParcelable(AirportDetailFragment.AIRPORT_DETAIL_FRAGMENT_ID, Parcels.wrap(airport));
+                AirportDetailFragment fragment = new AirportDetailFragment();
+                fragment.setArguments(arguments);
+                getFragmentManager().beginTransaction()
+                    .replace(R.id.frame_container, fragment)
+                    .commit();
+
                 // Call detail activity
                 // use x and y airports fields to load GoogleMaps position marker
             }

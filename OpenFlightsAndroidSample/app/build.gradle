@@ -3,6 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
+
     defaultConfig {
         applicationId "pos.jgeraldo.com.openflightsandroidsample"
         minSdkVersion 16
@@ -11,6 +12,11 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+    dataBinding {
+        enabled true
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -31,13 +37,25 @@ dependencies {
     compile "com.android.support:recyclerview-v7:$version_support"
     compile "com.android.support:cardview-v7:$version_support"
 
+    compile "android.arch.lifecycle:extensions:$version_lifecycle_version"
+    compile "android.arch.persistence.room:runtime:$version_room_version"
+    annotationProcessor "android.arch.lifecycle:compiler:$version_lifecycle_version"
+    annotationProcessor "android.arch.persistence.room:compiler:$version_room_version"
+
     compile "com.afollestad.material-dialogs:commons:$version_material_dialogs"
+
+    compile "org.parceler:parceler-api:$version_parceler"
+    annotationProcessor "org.parceler:parceler:$version_parceler"
 
     compile "com.google.code.gson:gson:$version_gson"
     compile "com.squareup.okhttp3:okhttp:$version_okhttp"
     compile "com.jakewharton:butterknife:$version_butterknife"
     annotationProcessor "com.jakewharton:butterknife-compiler:$version_butterknife"
+    compile "com.github.bumptech.glide:glide:$version_glide"
 
-    compile ("com.android.support.constraint:constraint-layout:$version_constraint" + ".backup")
+    compile("com.android.support.constraint:constraint-layout:$version_constraint" + ".backup")
+
+    compile 'com.google.android.gms:play-services-maps:10.2.6'
+    compile 'com.android.support:support-v4:25.3.1'
     testCompile 'junit:junit:4.12'
 }

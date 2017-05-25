@@ -4,12 +4,16 @@ buildscript {
 
     ext.version_support = '25.3.1'
     ext.version_constraint = '1.0.2'
+    ext.version_lifecycle_version = '1.0.0-alpha1'
+    ext.version_room_version = '1.0.0-alpha1'
 
     ext.version_material_dialogs = '0.9.4.5'
 
     ext.version_butterknife = '8.5.1'
     ext.version_okhttp = '3.7.0'
     ext.version_gson = '2.8.0'
+    ext.version_glide = '3.7.0'
+    ext.version_parceler = '1.1.6'
 
     repositories {
         jcenter()
@@ -25,6 +29,9 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        maven {
+            url "https://maven.google.com"
+        }
     }
 }
 

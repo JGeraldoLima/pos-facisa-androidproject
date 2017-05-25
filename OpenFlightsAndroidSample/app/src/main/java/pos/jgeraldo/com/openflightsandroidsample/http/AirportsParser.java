@@ -1,7 +1,5 @@
 package pos.jgeraldo.com.openflightsandroidsample.http;
 
-import android.util.Log;
-
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -12,13 +10,13 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import pos.jgeraldo.com.openflightsandroidsample.storage.models.AirportGson;
+import pos.jgeraldo.com.openflightsandroidsample.storage.models.Airport;
 
 public class AirportsParser {
 
     static String baseUrl = "https://openflights.org/php/apsearch.php";
 
-    public static List<AirportGson> searchAirports(String airportName, String cityName, String countryName) throws IOException {
+    public static List<Airport> searchAirports(String airportName, String cityName, String countryName) throws IOException {
 
         RequestBody body = getFormData("", airportName, cityName, countryName, "0");
         OkHttpClient client = new OkHttpClient();
