@@ -1,5 +1,6 @@
 package pos.jgeraldo.com.openflightsandroidsample.storage.dao;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -15,14 +16,14 @@ import static android.arch.persistence.room.OnConflictStrategy.IGNORE;
 public interface IAirportDao {
 
     @Insert(onConflict = IGNORE)
-    void insertMovie(Airport airport);
+    void insertAirport(Airport airport);
 
     @Query("SELECT * FROM Airport WHERE isFavorite = 1 ORDER BY shortName")
-    List<Airport> listAllFavorites();
+    LiveData<List<Airport>> listAllFavorites();
 
-    @Query("SELECT COUNT(*) FROM Airport WHERE id = :id")
-    boolean isFavorite(String id);
+    @Query("SELECT COUNT(*) FROM Airport WHERE isFavorite = :isFavorite")
+    boolean isFavorite(boolean isFavorite);
 
     @Delete
-    void deleteMovies(Airport... airports);
+    void deleteAirports(Airport... airports);
 }

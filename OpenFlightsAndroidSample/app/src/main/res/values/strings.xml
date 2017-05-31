@@ -5,7 +5,7 @@
     <string name="msg_no_airports_found">No airports found with these data!</string>
     <string name="airport_search_hint">Search by country name . . .</string>
     <string name="searching_airports_message">Loading airports . . .</string>
-    <string name="airports_list_welcome_msg">Swipe left to filter search data and find airports!</string>
+    <string name="airports_list_welcome_msg">Click on the top right button to filter search data and find airports!</string>
 
     <string name="filter_dialog_title">Filter</string>
     <string name="filter_dialog_positive_text">Apply</string>
@@ -16,10 +16,8 @@
     <string name="filter_dialog_description">All fields are optional. If you do not provide any data, the app will list all available airports.</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="fragment_detail_airport_name" translatable="false">East 34th Street Heliport (TSS)</string>
     <string name="fragment_detail_airport_location" translatable="false">New York - United States</string>
-    <string name="title_activity_airport_detail">AirportDetailActivity</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 
@@ -109,7 +107,12 @@
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
-    <string name="action_settings">Settings</string>
-    <string name="airport_country_label_format" translatable="false">%s - %s</string>
+    <string name="airport_country_label_format" translatable="false">%s - %s | (%s)</string>
+    <string name="google_maps_api_key" translatable="false">AIzaSyAni3Lu7t51RfqlCbx1hMV51PzIpFiV4LQ</string>
+    <string name="tab_title_search">Search</string>
+    <string name="tab_title_favorites">Favorites</string>
+    <string name="detail_activity_title">Details</string>
+    <string name="no_favorites_at_moment">There are no airports marked as favorite yet!</string>
+    <string name="airport_position_label_format" translatable="false">%s, %s</string>
 
 </resources>

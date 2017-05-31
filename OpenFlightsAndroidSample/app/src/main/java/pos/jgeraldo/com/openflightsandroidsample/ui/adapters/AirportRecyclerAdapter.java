@@ -11,6 +11,7 @@ import java.util.List;
 import pos.jgeraldo.com.openflightsandroidsample.R;
 import pos.jgeraldo.com.openflightsandroidsample.databinding.AirportListItemBinding;
 import pos.jgeraldo.com.openflightsandroidsample.storage.models.Airport;
+import pos.jgeraldo.com.openflightsandroidsample.ui.listeners.OnAirportClickListener;
 
 public class AirportRecyclerAdapter extends RecyclerView.Adapter<AirportRecyclerAdapter.ViewHolder> {
 
@@ -64,9 +65,5 @@ public class AirportRecyclerAdapter extends RecyclerView.Adapter<AirportRecycler
             super(binding.getRoot());
             this.binding = binding;
         }
-    }
-
-    public interface OnAirportClickListener {
-        void onAirportClick(Airport airport);
     }
 }

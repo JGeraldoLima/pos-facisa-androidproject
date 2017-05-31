@@ -1,101 +1,182 @@
 package pos.jgeraldo.com.openflightsandroidsample.ui.fragments;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.parceler.Parcels;
 
 import pos.jgeraldo.com.openflightsandroidsample.R;
+import pos.jgeraldo.com.openflightsandroidsample.databinding.FragmentAirportDetailBinding;
+import pos.jgeraldo.com.openflightsandroidsample.storage.dao.AppDatabase;
+import pos.jgeraldo.com.openflightsandroidsample.storage.dao.IAirportDao;
+import pos.jgeraldo.com.openflightsandroidsample.storage.models.Airport;
 
-public class AirportDetailFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    public static final String AIRPORT_DETAIL_FRAGMENT_ID = "airport_detail";
-    private static final String ARG_PARAM2 = "param2";
+import static pos.jgeraldo.com.openflightsandroidsample.ui.activities.AirportDetailActivity.EXTRA_AIRPORT_DETAIL;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+public class AirportDetailFragment extends Fragment implements OnMapReadyCallback {
 
-    private OnFragmentInteractionListener mListener;
+    private Context mContext;
+
+    private Activity mActivity;
+
+    private static FragmentManager mFragmentManager;
+
+    FragmentAirportDetailBinding binding;
+
+    IAirportDao airportDao;
+
+    Airport mAirport;
+
+    GoogleMap mMap;
 
     public AirportDetailFragment() {
-        // Required empty public constructor
+        super();
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment AirportDetailFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static AirportDetailFragment newInstance(String param1, String param2) {
-        AirportDetailFragment fragment = new AirportDetailFragment();
-        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    public static AirportDetailFragment newInstance(Airport airport) {
+        Bundle params = new Bundle();
+        params.putParcelable(EXTRA_AIRPORT_DETAIL, Parcels.wrap(airport));
+
+        AirportDetailFragment f = new AirportDetailFragment();
+        f.setArguments(params);
+
+        return f;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        airportDao = AppDatabase.getInMemoryDatabase(getContext()).airportDao();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+
+        setHasOptionsMenu(true);
+        setRetainInstance(true);
+
+        mActivity = getActivity();
+        mContext = getContext();
+
+        mFragmentManager = getChildFragmentManager();
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (getResources().getBoolean(R.bool.smartphone)) {
+            ((AppCompatActivity) mActivity).setSupportActionBar(binding.toolbar);
+            ActionBar toolbar = ((AppCompatActivity) mActivity).getSupportActionBar();
+            toolbar.setDisplayHomeAsUpEnabled(true);
+            toolbar.setTitle(mAirport.shortName);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_airport_detail, container, false);
+
+        mAirport = Parcels.unwrap(getArguments().getParcelable(EXTRA_AIRPORT_DETAIL));
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_airport_detail, container, false);
+        binding.setAirport(mAirport);
+
+        updateFabIcon(airportDao.isFavorite(mAirport.isFavorite));
+        binding.fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleFavorite();
+            }
+        });
+        setUpMap();
+
+        return binding.getRoot();
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+    private void updateFabIcon(boolean isFavorite){
+        binding.fab.setImageResource(isFavorite ? R.drawable.ic_favorite : R.drawable.ic_not_favorite);
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+    public void toggleFavorite() {
+        final Airport airport = binding.getAirport();
+        boolean isFavorite = airportDao.isFavorite(airport.isFavorite);
+        if (isFavorite) {
+            airportDao.deleteAirports(airport);
+//            Toast.makeText(getActivity(), R.string.msg_favorite_removed, Toast.LENGTH_SHORT).show();
         } else {
-            throw new RuntimeException(context.toString()
-                + " must implement OnFragmentInteractionListener");
+            airportDao.insertAirport(airport);
+//            Toast.makeText(getActivity(), R.string.msg_favorite_added, Toast.LENGTH_SHORT).show();
         }
+
+        // Animate
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(
+            binding.fab, View.SCALE_X, 0f);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(
+            binding.fab, View.SCALE_Y, 0f);
+        scaleX.setRepeatMode(ValueAnimator.REVERSE);
+        scaleX.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+                super.onAnimationRepeat(animation);
+                updateFabIcon(airportDao.isFavorite(airport.isFavorite));
+            }
+        });
+        scaleY.setRepeatMode(ValueAnimator.REVERSE);
+        scaleX.setRepeatCount(1);
+        scaleY.setRepeatCount(1);
+        AnimatorSet set = new AnimatorSet();
+        set.playTogether(scaleX, scaleY);
+        set.start();
+    }
+
+    private void setUpMap() {
+        //TODO try to use databinding here
+        SupportMapFragment mapFragment = (SupportMapFragment) mFragmentManager.findFragmentById(R.id.mapAirportLocation);
+        mapFragment.getMapAsync(this);
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        double latitude = Double.parseDouble(mAirport.latitude);
+        double longitude = Double.parseDouble(mAirport.longitude);
+
+        LatLng airportMarkerLocation = new LatLng(latitude, longitude);
+        BitmapDescriptor myAirportMarkerIcon = BitmapDescriptorFactory.fromResource(R.mipmap.ic_airport_map_marker);
+
+        MarkerOptions currentMarkerOptions = new MarkerOptions()
+            .position(airportMarkerLocation)
+            .title(mAirport.getCompleteName())
+            .icon(myAirportMarkerIcon);
+        mMap.addMarker(currentMarkerOptions);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(airportMarkerLocation, 15.5f));
     }
 }

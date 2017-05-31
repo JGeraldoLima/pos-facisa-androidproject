@@ -3,36 +3,35 @@ package pos.jgeraldo.com.openflightsandroidsample.ui.fragments;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
-import org.parceler.Parcels;
-
 import java.io.IOException;
 import java.util.List;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import pos.jgeraldo.com.openflightsandroidsample.R;
+import pos.jgeraldo.com.openflightsandroidsample.databinding.FragmentAirportsListBinding;
 import pos.jgeraldo.com.openflightsandroidsample.http.AirportsParser;
 import pos.jgeraldo.com.openflightsandroidsample.storage.models.Airport;
 import pos.jgeraldo.com.openflightsandroidsample.ui.adapters.AirportRecyclerAdapter;
+import pos.jgeraldo.com.openflightsandroidsample.ui.listeners.OnAirportClickListener;
 
 public class AirportsListFragment extends Fragment {
 
@@ -40,21 +39,11 @@ public class AirportsListFragment extends Fragment {
 
     private Context mContext;
 
-    @BindView(R.id.ibFilterSearch)
-    ImageButton ibFilterSearch;
-
-    @BindView(R.id.rvAirports)
-    RecyclerView rvAirports;
-
-    @BindView(R.id.ivAirportListNoData)
-    ImageView ivAirportListNoData;
-
-    @BindView(R.id.tvAirportsList)
-    TextView tvAirportsList;
-
     List<Airport> mAirports;
 
     private MaterialDialog searchFilterDialog;
+
+    private FragmentAirportsListBinding binding;
 
     public AirportsListFragment() {
     }
@@ -72,13 +61,15 @@ public class AirportsListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_airports_list, container, false);
-        ButterKnife.bind(this, view);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_airports_list, container, false);
+
+        View root = binding.getRoot();
+        ButterKnife.bind(this, root);
 
         if (mAirports != null) {
             updateList();
         }
-        return view;
+        return root;
     }
 
     private class AirportSearchTask extends AsyncTask<String, Void, List<Airport>> {
@@ -122,12 +113,12 @@ public class AirportsListFragment extends Fragment {
             boolean isEmpty = mAirports == null || mAirports.size() <= 0;
 
             if (isEmpty) {
-                ivAirportListNoData.setVisibility(View.VISIBLE);
-                tvAirportsList.setText(R.string.msg_no_airports_found);
-                tvAirportsList.setVisibility(View.VISIBLE);
+                binding.ivAirportListNoData.setVisibility(View.VISIBLE);
+                binding.tvAirportsList.setText(R.string.msg_no_airports_found);
+                binding.tvAirportsList.setVisibility(View.VISIBLE);
             } else {
-                ivAirportListNoData.setVisibility(View.GONE);
-                tvAirportsList.setVisibility(View.GONE);
+                binding.ivAirportListNoData.setVisibility(View.GONE);
+                binding.tvAirportsList.setVisibility(View.GONE);
             }
 
             updateList();
@@ -156,24 +147,15 @@ public class AirportsListFragment extends Fragment {
 
     private void updateList() {
         searchFilterDialog.dismiss();
-        AirportRecyclerAdapter adapter = new AirportRecyclerAdapter(mAirports, new AirportRecyclerAdapter
-            .OnAirportClickListener() {
-            @Override
-            public void onAirportClick(Airport airport) {
-                Bundle arguments = new Bundle();
-                arguments.putParcelable(AirportDetailFragment.AIRPORT_DETAIL_FRAGMENT_ID, Parcels.wrap(airport));
-                AirportDetailFragment fragment = new AirportDetailFragment();
-                fragment.setArguments(arguments);
-                getFragmentManager().beginTransaction()
-                    .replace(R.id.frame_container, fragment)
-                    .commit();
 
-                // Call detail activity
-                // use x and y airports fields to load GoogleMaps position marker
-            }
-        });
-        rvAirports.setLayoutManager(new LinearLayoutManager(getActivity()));
-        rvAirports.setAdapter(adapter);
+        OnAirportClickListener listener = null;
+        if (mActivity instanceof OnAirportClickListener) {
+            listener = (OnAirportClickListener) getActivity();
+        }
+
+        AirportRecyclerAdapter adapter = new AirportRecyclerAdapter(mAirports, listener);
+        binding.rvAirports.setLayoutManager(new LinearLayoutManager(getActivity()));
+        binding.rvAirports.setAdapter(adapter);
     }
 
     private void openSearchFilterDialog() {
@@ -213,8 +195,20 @@ public class AirportsListFragment extends Fragment {
         searchFilterDialog.show();
     }
 
-    @OnClick(R.id.ibFilterSearch)
-    void onClick(){
-        openSearchFilterDialog();
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.airports_list, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.filterAirports:
+                openSearchFilterDialog();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

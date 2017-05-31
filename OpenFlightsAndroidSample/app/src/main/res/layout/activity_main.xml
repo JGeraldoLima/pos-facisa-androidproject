@@ -1,15 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:id="@+id/frame_container"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context="pos.jgeraldo.com.openflightsandroidsample.ui.activities.MainActivity">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context="pos.jgeraldo.com.openflightsandroidsample.ui.activities.MainActivity">
 
-    <fragment
-        android:id="@+id/fragment_list_movie"
-        android:name="pos.jgeraldo.com.openflightsandroidsample.ui.fragments.AirportsListFragment"
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tabsMain"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        app:tabGravity="fill"
+        app:tabMode="fixed"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" /> 
 
-</FrameLayout>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vpMain"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

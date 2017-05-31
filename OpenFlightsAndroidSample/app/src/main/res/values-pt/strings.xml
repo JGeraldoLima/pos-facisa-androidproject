@@ -5,7 +5,7 @@
     <string name="msg_no_airports_found">Não foram encontrados aeroportos com estas informações!</string>
     <string name="airport_search_hint">Procure pelo nome do país . . .</string>
     <string name="searching_airports_message">Carregando aeroportos . . .</string>
-    <string name="airports_list_welcome_msg">Deslize para a esquerda para adicionar um filtro de busca e encontre aeroportos!</string>
+    <string name="airports_list_welcome_msg">Clique no botão do canto superior direito para adicionar um filtro de busca e encontre aeroportos!</string>
     <string name="filter_dialog_title">Filtro</string>
     <string name="cancel">Cancelar</string>
     <string name="filter_dialog_input_airport_name">Nome. Ex.: Congonhas</string>
@@ -13,4 +13,8 @@
     <string name="filter_dialog_input_airport_city">Cidade. Ex.: São Paulo</string>
     <string name="filter_dialog_positive_text">Aplicar</string>
     <string name="filter_dialog_description">Todos os campos são opcionais. Se você não fornecer nenhum dado, todos os aeroportos disponíveis serão listados.</string>
+    <string name="tab_title_search">Procurar</string>
+    <string name="tab_title_favorites">Favoritos</string>
+    <string name="detail_activity_title">Detalhes</string>
+    <string name="no_favorites_at_moment">Ainda não há aeroportos marcados como favoritos!</string>
 </resources>

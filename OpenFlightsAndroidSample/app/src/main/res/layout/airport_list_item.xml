@@ -44,7 +44,7 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:text="@{String.format(@string/airport_country_label_format, airport.city, airport.countryName)}"
+                    android:text="@{String.format(@string/airport_country_label_format, airport.city, airport.countryName, airport.iataCode)}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintHorizontal_chainStyle="packed"
                     app:layout_constraintLeft_toLeftOf="parent"
