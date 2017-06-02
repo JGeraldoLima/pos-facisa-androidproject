@@ -25,9 +25,8 @@ import java.io.IOException;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import pos.jgeraldo.com.openflightsandroidsample.R;
-import pos.jgeraldo.com.openflightsandroidsample.databinding.FragmentAirportsListBinding;
+import pos.jgeraldo.com.openflightsandroidsample.databinding.AirportsListFragmentBinding;
 import pos.jgeraldo.com.openflightsandroidsample.http.AirportsParser;
 import pos.jgeraldo.com.openflightsandroidsample.storage.models.Airport;
 import pos.jgeraldo.com.openflightsandroidsample.ui.adapters.AirportRecyclerAdapter;
@@ -43,7 +42,7 @@ public class AirportsListFragment extends Fragment {
 
     private MaterialDialog searchFilterDialog;
 
-    private FragmentAirportsListBinding binding;
+    private AirportsListFragmentBinding binding;
 
     public AirportsListFragment() {
     }
@@ -61,7 +60,7 @@ public class AirportsListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_airports_list, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.airports_list_fragment, container, false);
 
         View root = binding.getRoot();
         ButterKnife.bind(this, root);

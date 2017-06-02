@@ -5,14 +5,14 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="horizontal"
-              tools:context="pos.jgeraldo.com.openflightsandroidsample.ui.activities.MainActivity">
+              tools:context="br.com.nglauber.aula06_movies.ui.MoviesActivity">
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:orientation="vertical"
-        tools:context="pos.jgeraldo.com.openflightsandroidsample.ui.activities.MainActivity">
+        tools:context="br.com.nglauber.aula06_movies.ui.MoviesActivity">
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tabsMain"
@@ -21,12 +21,12 @@
             android:background="?attr/colorPrimary"
             app:tabGravity="fill"
             app:tabMode="fixed"
-            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/> 
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" /> 
 
         <android.support.v4.view.ViewPager
             android:id="@+id/vpMain"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
     </LinearLayout>
 
@@ -34,6 +34,6 @@
         android:id="@+id/content_detail"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="2"/>
+        android:layout_weight="2" />
 
 </LinearLayout>

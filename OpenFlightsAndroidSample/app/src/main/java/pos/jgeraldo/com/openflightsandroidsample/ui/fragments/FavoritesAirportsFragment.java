@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import pos.jgeraldo.com.openflightsandroidsample.R;
-import pos.jgeraldo.com.openflightsandroidsample.databinding.FragmentAirportsListBinding;
+import pos.jgeraldo.com.openflightsandroidsample.databinding.AirportsListFragmentBinding;
 import pos.jgeraldo.com.openflightsandroidsample.storage.dao.AppDatabase;
 import pos.jgeraldo.com.openflightsandroidsample.storage.dao.IAirportDao;
 import pos.jgeraldo.com.openflightsandroidsample.storage.models.Airport;
@@ -27,7 +27,7 @@ public class FavoritesAirportsFragment extends LifecycleFragment {
 
     LiveData<List<Airport>> liveAirports;
 
-    FragmentAirportsListBinding binding;
+    AirportsListFragmentBinding binding;
 
     IAirportDao dao;
 
@@ -49,7 +49,7 @@ public class FavoritesAirportsFragment extends LifecycleFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_airports_list, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.airports_list_fragment, container, false);
         binding.tvAirportsList.setText(R.string.no_favorites_at_moment);
 
         new FavoritesAirportsTask().execute();

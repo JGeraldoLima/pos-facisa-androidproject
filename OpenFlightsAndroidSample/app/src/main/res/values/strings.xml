@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">OpenFlightsAndroidSample</string>
+    <string name="app_name" translatable="false">OpenFlightsAndroidSample</string>
     <string name="country_name">Brazil - BR</string>
     <string name="airport_name" translatable="false">Hollister Municipal Airport</string>
     <string name="msg_no_airports_found">No airports found with these data!</string>
@@ -107,12 +107,12 @@
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
-    <string name="airport_country_label_format" translatable="false">%s - %s | (%s)</string>
+    <string name="airport_country_label_format" translatable="false">%s - %s</string>
     <string name="google_maps_api_key" translatable="false">AIzaSyAni3Lu7t51RfqlCbx1hMV51PzIpFiV4LQ</string>
     <string name="tab_title_search">Search</string>
     <string name="tab_title_favorites">Favorites</string>
     <string name="detail_activity_title">Details</string>
     <string name="no_favorites_at_moment">There are no airports marked as favorite yet!</string>
-    <string name="airport_position_label_format" translatable="false">%s, %s</string>
+    <string name="airport_position_label_format" translatable="false">Latitude: %s, Longitude: %s</string>
 
 </resources>

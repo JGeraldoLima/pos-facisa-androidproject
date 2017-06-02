@@ -8,17 +8,19 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.LinearLayout;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -32,7 +34,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import org.parceler.Parcels;
 
 import pos.jgeraldo.com.openflightsandroidsample.R;
-import pos.jgeraldo.com.openflightsandroidsample.databinding.FragmentAirportDetailBinding;
+import pos.jgeraldo.com.openflightsandroidsample.databinding.AirportDetailFragmentBinding;
 import pos.jgeraldo.com.openflightsandroidsample.storage.dao.AppDatabase;
 import pos.jgeraldo.com.openflightsandroidsample.storage.dao.IAirportDao;
 import pos.jgeraldo.com.openflightsandroidsample.storage.models.Airport;
@@ -47,7 +49,7 @@ public class AirportDetailFragment extends Fragment implements OnMapReadyCallbac
 
     private static FragmentManager mFragmentManager;
 
-    FragmentAirportDetailBinding binding;
+    AirportDetailFragmentBinding binding;
 
     IAirportDao airportDao;
 
@@ -104,7 +106,7 @@ public class AirportDetailFragment extends Fragment implements OnMapReadyCallbac
                              Bundle savedInstanceState) {
 
         mAirport = Parcels.unwrap(getArguments().getParcelable(EXTRA_AIRPORT_DETAIL));
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_airport_detail, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.airport_detail_fragment, container, false);
         binding.setAirport(mAirport);
 
         updateFabIcon(airportDao.isFavorite(mAirport.isFavorite));
@@ -114,12 +116,32 @@ public class AirportDetailFragment extends Fragment implements OnMapReadyCallbac
                 toggleFavorite();
             }
         });
+        binding.tvDetailFragmentAirportFrom.setText(String.format("%s - %s", mAirport.city, mAirport.countryName));
+
+        if (binding.appBar != null) {
+            binding.appBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+                @Override
+                public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                    if (verticalOffset == 0 || verticalOffset <= binding.toolbar.getHeight()) {
+//                    int dpValue = 8; // margin in dips
+//                    float d = mContext.getResources().getDisplayMetrics().density;
+//                    int margin = (int) (dpValue * d); // margin in pixels
+//
+//                    ConstraintLayout.LayoutParams llp = new ConstraintLayout.LayoutParams(0, ConstraintLayout
+//                        .LayoutParams.WRAP_CONTENT);
+//                    llp.setMargins(margin, margin, margin, 0); // llp.setMargins(left, top, right, bottom);
+//                    binding.tvDetailFragmentAirportName.setLayoutParams(llp);
+                    }
+                }
+            });
+        }
+
         setUpMap();
 
         return binding.getRoot();
     }
 
-    private void updateFabIcon(boolean isFavorite){
+    private void updateFabIcon(boolean isFavorite) {
         binding.fab.setImageResource(isFavorite ? R.drawable.ic_favorite : R.drawable.ic_not_favorite);
     }
 
@@ -159,12 +181,41 @@ public class AirportDetailFragment extends Fragment implements OnMapReadyCallbac
         //TODO try to use databinding here
         SupportMapFragment mapFragment = (SupportMapFragment) mFragmentManager.findFragmentById(R.id.mapAirportLocation);
         mapFragment.getMapAsync(this);
+
+        binding.mapHandlerImage.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int action = event.getAction();
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                        // Disallow ScrollView to intercept touch events.
+                        binding.airportDetailNestedScroll.requestDisallowInterceptTouchEvent(true);
+                        // Disable touch on transparent view
+                        return false;
+
+                    case MotionEvent.ACTION_UP:
+                        // Allow ScrollView to intercept touch events.
+                        binding.airportDetailNestedScroll.requestDisallowInterceptTouchEvent(false);
+                        return true;
+
+                    case MotionEvent.ACTION_MOVE:
+                        binding.airportDetailNestedScroll.requestDisallowInterceptTouchEvent(true);
+                        return false;
+
+                    default:
+                        return true;
+                }
+            }
+        });
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        mMap.setBuildingsEnabled(true);
+        mMap.setIndoorEnabled(true);
 
         double latitude = Double.parseDouble(mAirport.latitude);
         double longitude = Double.parseDouble(mAirport.longitude);
