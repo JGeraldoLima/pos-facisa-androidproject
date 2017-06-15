@@ -5,6 +5,7 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.internal.ObjectConstructor;
 
 import org.parceler.Parcel;
 
@@ -125,5 +126,10 @@ public class Airport {
 
     public void setFavorite(boolean favorite) {
         isFavorite = favorite;
+    }
+
+    @Override
+    public boolean equals(Object airport1) {
+        return airport1 instanceof Airport && ((Airport) airport1).id.equals(this.id);
     }
 }

@@ -18,11 +18,14 @@ public interface IAirportDao {
     @Insert(onConflict = IGNORE)
     void insertAirport(Airport airport);
 
-    @Query("SELECT * FROM Airport WHERE isFavorite = 1 ORDER BY shortName")
-    LiveData<List<Airport>> listAllFavorites();
+    @Query("SELECT * FROM Airport ORDER BY shortName")
+    LiveData<List<Airport>> listAllFavoritesLive();
 
-    @Query("SELECT COUNT(*) FROM Airport WHERE isFavorite = :isFavorite")
-    boolean isFavorite(boolean isFavorite);
+    @Query("SELECT * FROM Airport")
+    List<Airport> listAllFavorites();
+
+    @Query("SELECT COUNT(*) FROM Airport WHERE id = :id")
+    boolean isFavorite(String id);
 
     @Delete
     void deleteAirports(Airport... airports);

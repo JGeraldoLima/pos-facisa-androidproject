@@ -16,4 +16,9 @@
     <string name="tab_title_favorites">Favoritos</string>
     <string name="detail_activity_title">Detalhes</string>
     <string name="no_favorites_at_moment">Ainda não há aeroportos marcados como favoritos!</string>
+    <string name="notice">Aviso</string>
+    <string name="dialog_question_exit">Tem certeza que deseja sair?</string>
+    <string name="airport_removed_from_favorites">Aeroporto removido dos favoritos!</string>
+    <string name="airport_marked_as_favorite">Aeroporto adicionado ao Favoritos!</string>
+    <string name="undo">Desfazer</string>
 </resources>

@@ -114,5 +114,10 @@
     <string name="detail_activity_title">Details</string>
     <string name="no_favorites_at_moment">There are no airports marked as favorite yet!</string>
     <string name="airport_position_label_format" translatable="false">Latitude: %s, Longitude: %s</string>
+    <string name="notice">Notice</string>
+    <string name="dialog_question_exit">Are you sure you want to exit?</string>
+    <string name="airport_removed_from_favorites">Airport removed from Favorites!</string>
+    <string name="airport_marked_as_favorite">Airport added as Favorite!</string>
+    <string name="undo">Undo</string>
 
 </resources>

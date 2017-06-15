@@ -28,9 +28,13 @@ import butterknife.ButterKnife;
 import pos.jgeraldo.com.openflightsandroidsample.R;
 import pos.jgeraldo.com.openflightsandroidsample.databinding.AirportsListFragmentBinding;
 import pos.jgeraldo.com.openflightsandroidsample.http.AirportsParser;
+import pos.jgeraldo.com.openflightsandroidsample.storage.dao.AppDatabase;
+import pos.jgeraldo.com.openflightsandroidsample.storage.dao.IAirportDao;
 import pos.jgeraldo.com.openflightsandroidsample.storage.models.Airport;
 import pos.jgeraldo.com.openflightsandroidsample.ui.adapters.AirportRecyclerAdapter;
 import pos.jgeraldo.com.openflightsandroidsample.ui.listeners.OnAirportClickListener;
+
+import static pos.jgeraldo.com.openflightsandroidsample.ui.activities.MainActivity.apiAirports;
 
 public class AirportsListFragment extends Fragment {
 
@@ -38,13 +42,23 @@ public class AirportsListFragment extends Fragment {
 
     private Context mContext;
 
-    List<Airport> mAirports;
+    IAirportDao dao;
+
+    List<Airport> favoriteAirports;
 
     private MaterialDialog searchFilterDialog;
 
     private AirportsListFragmentBinding binding;
 
+    AirportRecyclerAdapter airportsListAdapter;
+
     public AirportsListFragment() {
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        dao = AppDatabase.getInMemoryDatabase(context).airportDao();
     }
 
     @Override
@@ -65,10 +79,37 @@ public class AirportsListFragment extends Fragment {
         View root = binding.getRoot();
         ButterKnife.bind(this, root);
 
-        if (mAirports != null) {
-            updateList();
-        }
+        new FavoritesAirportsTask().execute();
         return root;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // We had returned from AirportDetailFragment -> AirportDetailActivity -> MainActivity -> AirportsListFragment
+        // so, maybe there is new data (in this case, an airport marked as favorite)
+        if (airportsListAdapter != null) {
+            airportsListAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private class FavoritesAirportsTask extends AsyncTask<String, Void, List<Airport>> {
+
+        @Override
+        protected List<Airport> doInBackground(String... params) {
+            return dao.listAllFavorites();
+        }
+
+        @Override
+        protected void onPostExecute(List<Airport> airports) {
+            super.onPostExecute(airports);
+            favoriteAirports = airports;
+
+            if (apiAirports != null) {
+                updateList();
+            }
+        }
     }
 
     private class AirportSearchTask extends AsyncTask<String, Void, List<Airport>> {
@@ -97,8 +138,8 @@ public class AirportsListFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(List<Airport> airports) {
-            super.onPostExecute(airports);
+        protected void onPostExecute(List<Airport> restApiAirports) {
+            super.onPostExecute(restApiAirports);
 
             try {
                 if (progressDialog.isShowing()) {
@@ -108,17 +149,7 @@ public class AirportsListFragment extends Fragment {
                 Log.e("List", e.getMessage());
             }
 
-            mAirports = airports;
-            boolean isEmpty = mAirports == null || mAirports.size() <= 0;
-
-            if (isEmpty) {
-                binding.ivAirportListNoData.setVisibility(View.VISIBLE);
-                binding.tvAirportsList.setText(R.string.msg_no_airports_found);
-                binding.tvAirportsList.setVisibility(View.VISIBLE);
-            } else {
-                binding.ivAirportListNoData.setVisibility(View.GONE);
-                binding.tvAirportsList.setVisibility(View.GONE);
-            }
+            apiAirports = restApiAirports;
 
             updateList();
         }
@@ -145,22 +176,44 @@ public class AirportsListFragment extends Fragment {
     }
 
     private void updateList() {
+        // Check which searched airports are already registered as favorite
+        // on the database and set them
+        for (Airport f : favoriteAirports) {
+            for (Airport a : apiAirports) {
+                if (a.id.equals(f.id)) {
+                    a.setFavorite(true);
+                    break;
+                }
+            }
+        }
+
+        boolean isEmpty = apiAirports.size() <= 0;
+
+        if (isEmpty) {
+            binding.ivAirportListNoData.setVisibility(View.VISIBLE);
+            binding.tvAirportsList.setText(R.string.msg_no_airports_found);
+            binding.tvAirportsList.setVisibility(View.VISIBLE);
+        } else {
+            binding.ivAirportListNoData.setVisibility(View.GONE);
+            binding.tvAirportsList.setVisibility(View.GONE);
+        }
+
         searchFilterDialog.dismiss();
 
         OnAirportClickListener listener = null;
         if (mActivity instanceof OnAirportClickListener) {
-            listener = (OnAirportClickListener) getActivity();
+            listener = (OnAirportClickListener) mActivity;
         }
 
-        AirportRecyclerAdapter adapter = new AirportRecyclerAdapter(mAirports, listener);
-        binding.rvAirports.setLayoutManager(new LinearLayoutManager(getActivity()));
-        binding.rvAirports.setAdapter(adapter);
+        airportsListAdapter = new AirportRecyclerAdapter(apiAirports, listener);
+        binding.rvAirports.setLayoutManager(new LinearLayoutManager(mActivity));
+        binding.rvAirports.setAdapter(airportsListAdapter);
     }
 
     private void openSearchFilterDialog() {
         searchFilterDialog = new MaterialDialog.Builder(mContext)
             .title(R.string.filter_dialog_title)
-            .customView(R.layout.search_airports_filter_dialog, false)
+            .customView(R.layout.search_airports_filter_dialog, true)
             .positiveText(R.string.filter_dialog_positive_text)
             .negativeText(R.string.cancel)
             .build();

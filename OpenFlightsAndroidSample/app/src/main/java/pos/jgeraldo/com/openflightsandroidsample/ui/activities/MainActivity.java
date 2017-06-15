@@ -1,5 +1,6 @@
 package pos.jgeraldo.com.openflightsandroidsample.ui.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -8,8 +9,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import org.parceler.Parcels;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import pos.jgeraldo.com.openflightsandroidsample.R;
 import pos.jgeraldo.com.openflightsandroidsample.storage.models.Airport;
@@ -17,13 +23,28 @@ import pos.jgeraldo.com.openflightsandroidsample.ui.fragments.AirportDetailFragm
 import pos.jgeraldo.com.openflightsandroidsample.ui.fragments.FavoritesAirportsFragment;
 import pos.jgeraldo.com.openflightsandroidsample.ui.fragments.AirportsListFragment;
 import pos.jgeraldo.com.openflightsandroidsample.ui.listeners.OnAirportClickListener;
+import pos.jgeraldo.com.openflightsandroidsample.utils.Util;
+
+import static pos.jgeraldo.com.openflightsandroidsample.ui.activities.AirportDetailActivity.EXTRA_AIRPORT_SOURCE_DETAIL;
 
 public class MainActivity extends AppCompatActivity implements OnAirportClickListener {
+
+    public static int DETAIL_ACTIVITY_RESULT_CODE = 0;
+
+    private Activity mActivity;
+
+    private static FragmentManager mFragmentManager;
+
+    // FIXME: check @AirportDetailActivity FIXME comment and help me clean this terrible code :(
+    public static List<Airport> apiAirports;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mActivity = this;
+        mFragmentManager = getSupportFragmentManager();
 
         AirportsPagerAdapter pagerAdapter = new AirportsPagerAdapter(getSupportFragmentManager());
 
@@ -34,6 +55,11 @@ public class MainActivity extends AppCompatActivity implements OnAirportClickLis
         tabLayout.setupWithViewPager(viewPager);
     }
 
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        String a ="sad";
+//    }
 
     private class AirportsPagerAdapter extends FragmentPagerAdapter {
 
@@ -62,16 +88,36 @@ public class MainActivity extends AppCompatActivity implements OnAirportClickLis
 
     @Override
     public void onAirportClick(Airport airport) {
-        if (getResources().getBoolean(R.bool.smartphone)) {
-            Intent it = new Intent(this, AirportDetailActivity.class);
+        if (mActivity.getResources().getBoolean(R.bool.smartphone)) {
+            Intent it = new Intent(mActivity, AirportDetailActivity.class);
             it.putExtra(AirportDetailActivity.EXTRA_AIRPORT_DETAIL, Parcels.wrap(airport));
-            startActivity(it);
+//            it.putExtra(AirportDetailActivity.EXTRA_AIRPORT_SOURCE_DETAIL, Parcels.wrap(apiAirports));
+            startActivityForResult(it, DETAIL_ACTIVITY_RESULT_CODE);
         } else {
-            AirportDetailFragment mdf = AirportDetailFragment.newInstance(airport);
-            getSupportFragmentManager()
+            //TODO: REPLICATE THE BEHAVIOR ABOVE
+            AirportDetailFragment adf = AirportDetailFragment.newInstance(airport);
+            mFragmentManager
                 .beginTransaction()
-                .replace(R.id.content_detail, mdf, AirportDetailActivity.DETAIL_FRAGMENT)
+                .replace(R.id.content_detail, adf, AirportDetailActivity.DETAIL_FRAGMENT)
                 .commit();
+        }
+    }
+
+//    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+//        super.onActivityResult(requestCode, resultCode, intent);
+//        if (resultCode == DETAIL_ACTIVITY_RESULT_CODE) {
+//            apiAirports.clear();
+//            apiAirports.addAll((List<Airport>) Parcels.unwrap(intent.getParcelableExtra
+//                (EXTRA_AIRPORT_SOURCE_DETAIL)));
+//        }
+//    }
+
+    @Override
+    public void onBackPressed() {
+        if (mFragmentManager.getBackStackEntryCount() <= 1) {
+            Util.openQuestionAlertDialog(mActivity, R.string.dialog_question_exit, true);
+        } else {
+            mFragmentManager.popBackStackImmediate();
         }
     }
 

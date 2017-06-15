@@ -37,7 +37,7 @@ public class FavoritesAirportsFragment extends LifecycleFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        dao = AppDatabase.getInMemoryDatabase(getContext()).airportDao();
+        dao = AppDatabase.getInMemoryDatabase(context).airportDao();
     }
 
     @Override
@@ -61,7 +61,7 @@ public class FavoritesAirportsFragment extends LifecycleFragment {
 
         @Override
         protected LiveData<List<Airport>> doInBackground(String... params) {
-            return dao.listAllFavorites();
+            return dao.listAllFavoritesLive();
         }
 
         @Override
@@ -72,7 +72,7 @@ public class FavoritesAirportsFragment extends LifecycleFragment {
                 @Override
                 public void onChanged(@Nullable List<Airport> airports) {
                     boolean isEmpty = airports == null || airports.size() <= 0;
-//                    binding.txtEmpty.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+                    binding.tvAirportsList.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
                     updateList(airports);
                 }
             });
