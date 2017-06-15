@@ -19,6 +19,7 @@ import java.util.List;
 
 import pos.jgeraldo.com.openflightsandroidsample.R;
 import pos.jgeraldo.com.openflightsandroidsample.storage.models.Airport;
+import pos.jgeraldo.com.openflightsandroidsample.ui.adapters.AirportRecyclerAdapter;
 import pos.jgeraldo.com.openflightsandroidsample.ui.fragments.AirportDetailFragment;
 import pos.jgeraldo.com.openflightsandroidsample.ui.fragments.FavoritesAirportsFragment;
 import pos.jgeraldo.com.openflightsandroidsample.ui.fragments.AirportsListFragment;
@@ -36,7 +37,11 @@ public class MainActivity extends AppCompatActivity implements OnAirportClickLis
     private static FragmentManager mFragmentManager;
 
     // FIXME: check @AirportDetailActivity FIXME comment and help me clean this terrible code :(
+    // For understanding purposes, these two objects bellow are beeing used globally on the application,
+    // just because the tablet support (it maked things more complex)
     public static List<Airport> apiAirports;
+
+    public static AirportRecyclerAdapter airportsListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,12 +59,6 @@ public class MainActivity extends AppCompatActivity implements OnAirportClickLis
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabsMain);
         tabLayout.setupWithViewPager(viewPager);
     }
-
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        String a ="sad";
-//    }
 
     private class AirportsPagerAdapter extends FragmentPagerAdapter {
 

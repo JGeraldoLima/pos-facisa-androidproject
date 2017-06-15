@@ -34,6 +34,7 @@ import pos.jgeraldo.com.openflightsandroidsample.storage.models.Airport;
 import pos.jgeraldo.com.openflightsandroidsample.ui.adapters.AirportRecyclerAdapter;
 import pos.jgeraldo.com.openflightsandroidsample.ui.listeners.OnAirportClickListener;
 
+import static pos.jgeraldo.com.openflightsandroidsample.ui.activities.MainActivity.airportsListAdapter;
 import static pos.jgeraldo.com.openflightsandroidsample.ui.activities.MainActivity.apiAirports;
 
 public class AirportsListFragment extends Fragment {
@@ -49,8 +50,6 @@ public class AirportsListFragment extends Fragment {
     private MaterialDialog searchFilterDialog;
 
     private AirportsListFragmentBinding binding;
-
-    AirportRecyclerAdapter airportsListAdapter;
 
     public AirportsListFragment() {
     }
@@ -83,16 +82,16 @@ public class AirportsListFragment extends Fragment {
         return root;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        // We had returned from AirportDetailFragment -> AirportDetailActivity -> MainActivity -> AirportsListFragment
-        // so, maybe there is new data (in this case, an airport marked as favorite)
-        if (airportsListAdapter != null) {
-            airportsListAdapter.notifyDataSetChanged();
-        }
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//
+//        /* We had returned from AirportDetailFragment -> AirportDetailActivity -> MainActivity -> AirportsListFragment
+//         so, maybe there is new data (in this case, an airport marked as favorite)*/
+//        if (airportsListAdapter != null) {
+//            airportsListAdapter.notifyDataSetChanged();
+//        }
+//    }
 
     private class FavoritesAirportsTask extends AsyncTask<String, Void, List<Airport>> {
 

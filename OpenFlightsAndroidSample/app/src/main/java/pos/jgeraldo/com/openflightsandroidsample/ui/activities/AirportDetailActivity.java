@@ -34,7 +34,7 @@ public class AirportDetailActivity extends AppCompatActivity {
     // when I click back button? Would be something like pass it as an argument of a bundle on fragment
     // onDetroy method, so I could catch it and then use on onBackPressed implementation below.
     // Any suggestions would be great!
-    public static List<Airport> airportSource;
+//    public static List<Airport> airportSource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,15 +54,15 @@ public class AirportDetailActivity extends AppCompatActivity {
         }
     }
 
-    private Intent prepareBackIntentData() {
-        Intent intent = new Intent();
-        Bundle bundle = new Bundle();
-
-        bundle.putParcelable(EXTRA_AIRPORT_SOURCE_DETAIL, Parcels.wrap(airportSource));
-        intent.putExtras(bundle);
-
-        return intent;
-    }
+//    private Intent prepareBackIntentData() {
+//        Intent intent = new Intent();
+//        Bundle bundle = new Bundle();
+//
+//        bundle.putParcelable(EXTRA_AIRPORT_SOURCE_DETAIL, Parcels.wrap(airportSource));
+//        intent.putExtras(bundle);
+//
+//        return intent;
+//    }
 
 //    @Nullable
 //    @Override

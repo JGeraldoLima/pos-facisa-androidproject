@@ -37,7 +37,7 @@ import pos.jgeraldo.com.openflightsandroidsample.storage.models.Airport;
 import pos.jgeraldo.com.openflightsandroidsample.utils.Util;
 
 import static pos.jgeraldo.com.openflightsandroidsample.ui.activities.AirportDetailActivity.EXTRA_AIRPORT_DETAIL;
-import static pos.jgeraldo.com.openflightsandroidsample.ui.activities.AirportDetailActivity.airportSource;
+import static pos.jgeraldo.com.openflightsandroidsample.ui.activities.MainActivity.airportsListAdapter;
 import static pos.jgeraldo.com.openflightsandroidsample.ui.activities.MainActivity.apiAirports;
 
 public class AirportDetailFragment extends Fragment implements OnMapReadyCallback {
@@ -164,6 +164,7 @@ public class AirportDetailFragment extends Fragment implements OnMapReadyCallbac
     private void updateAirportSourceItemState(int airportIndex, boolean state) {
         mAirport.setFavorite(state);
         /*airportSource*/apiAirports.set(airportIndex, mAirport);
+        airportsListAdapter.notifyDataSetChanged();
     }
 
     private void animateFavoriteFabIcon(final Airport airport) {
