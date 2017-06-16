@@ -119,5 +119,6 @@
     <string name="airport_removed_from_favorites">Airport removed from Favorites!</string>
     <string name="airport_marked_as_favorite">Airport added as Favorite!</string>
     <string name="undo">Undo</string>
+    <string name="no_more_results_to_show">There are no more airports to load!</string>
 
 </resources>

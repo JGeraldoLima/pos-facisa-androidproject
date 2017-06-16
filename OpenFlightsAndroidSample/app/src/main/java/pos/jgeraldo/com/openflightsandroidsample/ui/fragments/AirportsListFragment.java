@@ -6,8 +6,10 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +22,8 @@ import android.widget.EditText;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout;
+import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayoutDirection;
 
 import java.io.IOException;
 import java.util.List;
@@ -31,8 +35,10 @@ import pos.jgeraldo.com.openflightsandroidsample.http.AirportsParser;
 import pos.jgeraldo.com.openflightsandroidsample.storage.dao.AppDatabase;
 import pos.jgeraldo.com.openflightsandroidsample.storage.dao.IAirportDao;
 import pos.jgeraldo.com.openflightsandroidsample.storage.models.Airport;
+import pos.jgeraldo.com.openflightsandroidsample.storage.preferences.OFASPreferences;
 import pos.jgeraldo.com.openflightsandroidsample.ui.adapters.AirportRecyclerAdapter;
 import pos.jgeraldo.com.openflightsandroidsample.ui.listeners.OnAirportClickListener;
+import pos.jgeraldo.com.openflightsandroidsample.utils.Util;
 
 import static pos.jgeraldo.com.openflightsandroidsample.ui.activities.MainActivity.airportsListAdapter;
 import static pos.jgeraldo.com.openflightsandroidsample.ui.activities.MainActivity.apiAirports;
@@ -77,6 +83,9 @@ public class AirportsListFragment extends Fragment {
 
         View root = binding.getRoot();
         ButterKnife.bind(this, root);
+
+        binding.swipeBottomLoadMoreAirports.setOnRefreshListener(onLoadMoreListener);
+        binding.swipeBottomLoadMoreAirports.setColorScheme(R.color.colorPrimary, R.color.colorPrimaryDark, R.color.colorAccent);
 
         new FavoritesAirportsTask().execute();
         return root;
@@ -129,7 +138,7 @@ public class AirportsListFragment extends Fragment {
         @Override
         protected List<Airport> doInBackground(String... params) {
             try {
-                return AirportsParser.searchAirports(params[0], params[1], params[2]);
+                return AirportsParser.searchAirports(mContext, params[0], params[1], params[2]);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -148,8 +157,11 @@ public class AirportsListFragment extends Fragment {
                 Log.e("List", e.getMessage());
             }
 
-            apiAirports = restApiAirports;
-
+            if (OFASPreferences.getCurrentOffsetValue(mContext) > 0) {
+                apiAirports.addAll(restApiAirports); //TODO: maybe it causes duplicates?
+            } else {
+                apiAirports = restApiAirports;
+            }
             updateList();
         }
 
@@ -206,6 +218,7 @@ public class AirportsListFragment extends Fragment {
 
         airportsListAdapter = new AirportRecyclerAdapter(apiAirports, listener);
         binding.rvAirports.setLayoutManager(new LinearLayoutManager(mActivity));
+        binding.rvAirports.setItemAnimator(new DefaultItemAnimator());
         binding.rvAirports.setAdapter(airportsListAdapter);
     }
 
@@ -230,6 +243,8 @@ public class AirportsListFragment extends Fragment {
                 String name = edAirportName.getText().toString();
                 String city = edAirportCity.getText().toString();
                 String country = edAirportCountry.getText().toString();
+                //TODO: set search filters on preferences
+                OFASPreferences.eraseRequestInfo(mContext);
                 new AirportSearchTask().execute(name, city, country);
                 searchFilterDialog.dismiss();
             }
@@ -245,6 +260,33 @@ public class AirportsListFragment extends Fragment {
 
         searchFilterDialog.show();
     }
+
+    SwipyRefreshLayout.OnRefreshListener onLoadMoreListener = new SwipyRefreshLayout.OnRefreshListener() {
+
+        @Override
+        public void onRefresh(SwipyRefreshLayoutDirection swipyRefreshLayoutDirection) {
+            new Handler().postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    binding.swipeBottomLoadMoreAirports.setRefreshing(false);
+
+                    if (apiAirports != null) {
+                        int currentOffset = OFASPreferences.getCurrentOffsetValue(mContext);
+                        int maxResults = OFASPreferences.getCurrentSearchMaxResults(mContext);
+                        if (currentOffset != 0 && maxResults - currentOffset < 10) {
+                            Util.showSnackBar(mActivity, R.string.no_more_results_to_show, null);
+                        } else {
+                            currentOffset += 10;
+                            OFASPreferences.setCurrentOffsetValue(mContext, currentOffset);
+                            new AirportSearchTask().execute("", "", ""); //TODO: change for search filter saved on
+                            // preferences
+                        }
+                    }
+                }
+            }, 2500);
+        }
+    };
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

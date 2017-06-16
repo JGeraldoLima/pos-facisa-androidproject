@@ -1,5 +1,7 @@
 package pos.jgeraldo.com.openflightsandroidsample.http;
 
+import android.content.Context;
+
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -11,14 +13,16 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import pos.jgeraldo.com.openflightsandroidsample.storage.models.Airport;
+import pos.jgeraldo.com.openflightsandroidsample.storage.preferences.OFASPreferences;
 
 public class AirportsParser {
 
     static String baseUrl = "https://openflights.org/php/apsearch.php";
 
-    public static List<Airport> searchAirports(String airportName, String cityName, String countryName) throws IOException {
+    public static List<Airport> searchAirports(Context context, String airportName, String cityName, String countryName)
+        throws IOException {
 
-        RequestBody body = getFormData("", airportName, cityName, countryName, "0");
+        RequestBody body = getFormData(context, airportName, cityName, countryName);
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
@@ -32,16 +36,13 @@ public class AirportsParser {
 
         Gson gson = new Gson();
         AirportSearchResult result = gson.fromJson(json, AirportSearchResult.class);
+        OFASPreferences.setCurrentSearchMaxResults(context, result.maxQnty);
         return result.airports;
     }
 
-    private static RequestBody getFormData(String airportId, String airportName, String cityName, String countryName,
-                                           String offset) {
+    private static RequestBody getFormData(Context context, String airportName, String cityName, String countryName) {
 
-        // TODO: use offset property to load more items
-        // TODO: figure out how to load items by max qnty instead of page index (offset)
         return new FormBody.Builder()
-            .add("apid", airportId)
             .add("name", airportName)
             .add("city", cityName)
             .add("country", countryName)
@@ -50,7 +51,7 @@ public class AirportsParser {
             .add("db", "airports")
             .add("iatafilter", "false")
             .add("action", "SEARCH")
-            .add("offset", offset)
+            .add("offset", OFASPreferences.getCurrentOffsetValue(context) + "")
             .build();
     }
 }

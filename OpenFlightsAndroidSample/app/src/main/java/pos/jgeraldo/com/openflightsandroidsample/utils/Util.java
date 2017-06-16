@@ -15,6 +15,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
 import pos.jgeraldo.com.openflightsandroidsample.R;
+import pos.jgeraldo.com.openflightsandroidsample.storage.preferences.OFASPreferences;
 
 public class Util {
 
@@ -71,6 +72,7 @@ public class Util {
                 @Override
                 public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                     if (finishActivity) {
+                        OFASPreferences.eraseRequestInfo(activity);
                         activity.finish();
                     }
                     dialog.dismiss();
