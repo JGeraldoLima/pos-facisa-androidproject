@@ -22,4 +22,6 @@
     <string name="airport_marked_as_favorite">Aeroporto adicionado ao Favoritos!</string>
     <string name="undo">Desfazer</string>
     <string name="no_more_results_to_show">Não há mais aeroportos para carregar!</string>
+    <string name="available_network_connection">Conexão com a internet estabelecida. Agora você pode procurar por aeroportos!</string>
+    <string name="unavailable_network_connection">Você está sem conexão com a internet! Até que se conecte, não será possível procurar por aeroportos!</string>
 </resources>

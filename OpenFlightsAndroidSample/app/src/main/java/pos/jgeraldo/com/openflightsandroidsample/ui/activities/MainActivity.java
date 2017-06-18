@@ -2,6 +2,8 @@ package pos.jgeraldo.com.openflightsandroidsample.ui.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -23,6 +25,7 @@ import pos.jgeraldo.com.openflightsandroidsample.ui.adapters.AirportRecyclerAdap
 import pos.jgeraldo.com.openflightsandroidsample.ui.fragments.AirportDetailFragment;
 import pos.jgeraldo.com.openflightsandroidsample.ui.fragments.FavoritesAirportsFragment;
 import pos.jgeraldo.com.openflightsandroidsample.ui.fragments.AirportsListFragment;
+import pos.jgeraldo.com.openflightsandroidsample.ui.listeners.NetworkStateListener;
 import pos.jgeraldo.com.openflightsandroidsample.ui.listeners.OnAirportClickListener;
 import pos.jgeraldo.com.openflightsandroidsample.utils.Util;
 
@@ -33,6 +36,8 @@ public class MainActivity extends AppCompatActivity implements OnAirportClickLis
     public static int DETAIL_ACTIVITY_RESULT_CODE = 0;
 
     private Activity mActivity;
+
+    private NetworkStateListener mNetworkStateListener;
 
     private static FragmentManager mFragmentManager;
 
@@ -50,6 +55,10 @@ public class MainActivity extends AppCompatActivity implements OnAirportClickLis
 
         mActivity = this;
         mFragmentManager = getSupportFragmentManager();
+
+        mNetworkStateListener = new NetworkStateListener(mActivity);
+        registerReceiver(mNetworkStateListener, new IntentFilter(
+            ConnectivityManager.CONNECTIVITY_ACTION));
 
         AirportsPagerAdapter pagerAdapter = new AirportsPagerAdapter(getSupportFragmentManager());
 

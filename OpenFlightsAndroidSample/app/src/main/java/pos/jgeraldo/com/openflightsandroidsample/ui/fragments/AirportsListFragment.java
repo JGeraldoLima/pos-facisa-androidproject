@@ -157,6 +157,7 @@ public class AirportsListFragment extends Fragment {
                 Log.e("List", e.getMessage());
             }
 
+            // TODO: treat when result is null(show snackbar)
             if (OFASPreferences.getCurrentOffsetValue(mContext) > 0) {
                 apiAirports.addAll(restApiAirports); //TODO: maybe it causes duplicates?
             } else {

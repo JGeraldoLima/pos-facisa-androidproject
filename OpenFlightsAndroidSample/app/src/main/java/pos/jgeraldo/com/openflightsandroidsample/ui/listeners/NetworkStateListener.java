@@ -5,7 +5,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 
 import pos.jgeraldo.com.openflightsandroidsample.R;
 import pos.jgeraldo.com.openflightsandroidsample.utils.NetworkUtil;
@@ -23,16 +25,22 @@ public class NetworkStateListener extends BroadcastReceiver {
     public void onReceive(final Context context, final Intent intent) {
 
         int status = NetworkUtil.getConnectivityStatusString(context);
-//        if (!"android.intent.action.BOOT_COMPLETED".equals(intent.getAction())) {
-//            Toolbar toolbar = (Toolbar) mActivity.findViewById(R.id.toolbar_main);
-//            if (status == NetworkUtil.NETWORK_STATUS_WIFI || status == NetworkUtil.NETWORK_STATUS_MOBILE){
-//                toolbar.findViewById(R.id.icNetworkUnavailable).setVisibility(View.INVISIBLE);
-//                Util.showSnackBar(mActivity, R.string.user_connected);
-//                NetworkUtil.HAS_CONNECTION = true;
-//            } else {
-//                Util.showSnackBar(mActivity,R.string.network_unavailable_status);
-//                toolbar.findViewById(R.id.icNetworkUnavailable).setVisibility(View.VISIBLE);
-//                NetworkUtil.HAS_CONNECTION = false;
-//            }
+        if (!"android.intent.action.BOOT_COMPLETED".equals(intent.getAction())) {
+//            MenuItem searchFilterIcon = (MenuItem) mActivity.findViewById(R.id.filterAirports);
+//            ImageView ivAirportListNoData = (ImageView) mActivity.findViewById(R.id.ivAirportListNoData);
+            if (status == NetworkUtil.NETWORK_STATUS_WIFI || status == NetworkUtil.NETWORK_STATUS_MOBILE) {
+//                searchFilterIcon.setIcon(R.drawable.ic_filter_search);
+//                ivAirportListNoData.setVisibility(View.GONE);
+                Util.showSnackBar(mActivity, R.string.available_network_connection, null);
+                NetworkUtil.HAS_CONNECTION = true;
+            } else {
+                Util.showSnackBar(mActivity, R.string.unavailable_network_connection, null);
+//                ivAirportListNoData.setVisibility(View.VISIBLE);
+//                ivAirportListNoData.setImageResource(R.drawable.ic_no_connection);
+//                searchFilterIcon.setIcon(R.drawable.ic_filter_disabled);
+//                searchFilterIcon.setEnabled(false);
+                NetworkUtil.HAS_CONNECTION = false;
+            }
+        }
     }
 }
