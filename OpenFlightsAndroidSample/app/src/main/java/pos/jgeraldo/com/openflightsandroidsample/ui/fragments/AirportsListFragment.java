@@ -120,7 +120,7 @@ public class AirportsListFragment extends Fragment {
         }
     }
 
-    private class AirportSearchTask extends AsyncTask<String, Void, List<Airport>> {
+    private class AirportSearchTask extends AsyncTask<Void, Void, List<Airport>> {
 
         private ProgressDialog progressDialog;
 
@@ -136,9 +136,9 @@ public class AirportsListFragment extends Fragment {
         }
 
         @Override
-        protected List<Airport> doInBackground(String... params) {
+        protected List<Airport> doInBackground(Void... params) {
             try {
-                return AirportsParser.searchAirports(mContext, params[0], params[1], params[2]);
+                return AirportsParser.searchAirports(mContext);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -187,8 +187,8 @@ public class AirportsListFragment extends Fragment {
     }
 
     private void updateList() {
-        // Check which searched airports are already registered as favorite
-        // on the database and set them
+        /* Check which searched airports are already registered as favorite
+        on the database and set them */
         for (Airport f : favoriteAirports) {
             for (Airport a : apiAirports) {
                 if (a.id.equals(f.id)) {
@@ -243,9 +243,12 @@ public class AirportsListFragment extends Fragment {
                 String name = edAirportName.getText().toString();
                 String city = edAirportCity.getText().toString();
                 String country = edAirportCountry.getText().toString();
-                //TODO: set search filters on preferences
+
                 OFASPreferences.eraseRequestInfo(mContext);
-                new AirportSearchTask().execute(name, city, country);
+                OFASPreferences.setCurrentSearchAirportName(mContext, name);
+                OFASPreferences.setCurrentSearchCityName(mContext, city);
+                OFASPreferences.setCurrentSearchCountryName(mContext, country);
+                new AirportSearchTask().execute();
                 searchFilterDialog.dismiss();
             }
         });
@@ -279,8 +282,7 @@ public class AirportsListFragment extends Fragment {
                         } else {
                             currentOffset += 10;
                             OFASPreferences.setCurrentOffsetValue(mContext, currentOffset);
-                            new AirportSearchTask().execute("", "", ""); //TODO: change for search filter saved on
-                            // preferences
+                            new AirportSearchTask().execute();
                         }
                     }
                 }

@@ -28,6 +28,9 @@ public class OFASPreferences {
     public static void eraseRequestInfo(Context context) {
         setCurrentOffsetValue(context, 0);
         setCurrentSearchMaxResults(context, 0);
+        setCurrentSearchAirportName(context, "");
+        setCurrentSearchCityName(context, "");
+        setCurrentSearchCountryName(context, "");
     }
 
     public static int getCurrentOffsetValue(Context context) {
@@ -40,6 +43,21 @@ public class OFASPreferences {
         return ofasPreferences.getInt(Constants.PREFS_MAX_RESULTS, 0);
     }
 
+    public static String getCurrentSearchAirportName(Context context) {
+        initiatePreferencesIfNull(context);
+        return ofasPreferences.getString(Constants.PREFS_CURRENT_FILTER_AIRPORT_NAME_VALUE, "");
+    }
+
+    public static String getCurrentSearchCityName(Context context) {
+        initiatePreferencesIfNull(context);
+        return ofasPreferences.getString(Constants.PREFS_CURRENT_FILTER_CITY_NAME_VALUE, "");
+    }
+
+    public static String getCurrentSearchCountryName(Context context) {
+        initiatePreferencesIfNull(context);
+        return ofasPreferences.getString(Constants.PREFS_CURRENT_FILTER_COUNTRY_NAME_VALUE, "");
+    }
+
     public static void setCurrentOffsetValue(Context context, int offset) {
         initiatePreferencesIfNull(context);
         ofasPreferenvesEditor.putInt(Constants.PREFS_OFFSET, offset);
@@ -49,6 +67,24 @@ public class OFASPreferences {
     public static void setCurrentSearchMaxResults(Context context, int maxResults) {
         initiatePreferencesIfNull(context);
         ofasPreferenvesEditor.putInt(Constants.PREFS_MAX_RESULTS, maxResults);
+        saveChanges();
+    }
+
+    public static void setCurrentSearchAirportName(Context context, String name) {
+        initiatePreferencesIfNull(context);
+        ofasPreferenvesEditor.putString(Constants.PREFS_CURRENT_FILTER_AIRPORT_NAME_VALUE, name);
+        saveChanges();
+    }
+
+    public static void setCurrentSearchCityName(Context context, String name) {
+        initiatePreferencesIfNull(context);
+        ofasPreferenvesEditor.putString(Constants.PREFS_CURRENT_FILTER_CITY_NAME_VALUE, name);
+        saveChanges();
+    }
+
+    public static void setCurrentSearchCountryName(Context context, String name) {
+        initiatePreferencesIfNull(context);
+        ofasPreferenvesEditor.putString(Constants.PREFS_CURRENT_FILTER_COUNTRY_NAME_VALUE, name);
         saveChanges();
     }
 }

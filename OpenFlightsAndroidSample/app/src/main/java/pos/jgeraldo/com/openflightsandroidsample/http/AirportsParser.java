@@ -19,8 +19,12 @@ public class AirportsParser {
 
     static String baseUrl = "https://openflights.org/php/apsearch.php";
 
-    public static List<Airport> searchAirports(Context context, String airportName, String cityName, String countryName)
+    public static List<Airport> searchAirports(Context context)
         throws IOException {
+
+        String airportName = OFASPreferences.getCurrentSearchAirportName(context);
+        String cityName = OFASPreferences.getCurrentSearchCityName(context);
+        String countryName = OFASPreferences.getCurrentSearchCountryName(context);
 
         RequestBody body = getFormData(context, airportName, cityName, countryName);
         OkHttpClient client = new OkHttpClient();
