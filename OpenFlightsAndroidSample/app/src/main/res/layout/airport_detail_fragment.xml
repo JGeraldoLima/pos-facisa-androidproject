@@ -10,134 +10,100 @@
             type="pos.jgeraldo.com.openflightsandroidsample.storage.models.Airport"/>
     </data>
 
-    <android.support.design.widget.CoordinatorLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
-        tools:context="pos.jgeraldo.com.openflightsandroidsample.ui.activities.AirportDetailActivity">
+        android:layout_height="match_parent">
 
-        <android.support.design.widget.AppBarLayout
-            android:id="@+id/app_bar"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/app_bar_height"
-            android:fitsSystemWindows="true"
-            android:theme="@style/AppTheme.AppBarOverlay">
 
-            <android.support.design.widget.CollapsingToolbarLayout
-                android:id="@+id/toolbar_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fitsSystemWindows="true"
-                app:contentScrim="?attr/colorPrimary"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
-                <android.support.v7.widget.Toolbar
-                    android:id="@+id/toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    app:contentInsetLeft="0dp"
-                    app:contentInsetStart="0dp"
-                    app:contentInsetStartWithNavigation="0dp"
-                    app:layout_collapseMode="pin"
-                    app:popupTheme="@style/AppTheme.PopupOverlay"/>
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:tools="http://schemas.android.com/tools"
+                  android:id="@+id/mapAirportLocation"
+                  android:name="com.google.android.gms.maps.SupportMapFragment"
+                  android:layout_width="0dp"
+                  android:layout_height="0dp"
+                  android:layout_marginTop="8dp"
+                  app:layout_constraintBottom_toBottomOf="parent"
+                  app:layout_constraintHorizontal_bias="0.0"
+                  app:layout_constraintLeft_toLeftOf="parent"
+                  app:layout_constraintRight_toRightOf="parent"
+                  app:layout_constraintTop_toBottomOf="@+id/tvDetailFragmentAirportPos"
+                  app:layout_constraintVertical_bias="1.0"
+                  tools:context="pos.jgeraldo.com.openflightsandroidsample.ui.fragments.AirportDetailFragment"/>
 
-            </android.support.design.widget.CollapsingToolbarLayout>
-        </android.support.design.widget.AppBarLayout>
 
-        <android.support.v4.widget.NestedScrollView
-            android:id="@+id/airportDetailNestedScroll"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            tools:context="br.com.nglauber.aula06_movies.ui.MovieDetailActivity">
+        <TextView
+            android:id="@+id/tvDetailFragmentAirportName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@{airport.completeName}"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"/>
 
-            <android.support.constraint.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp">
+        <TextView
+            android:id="@+id/tvDetailFragmentAirportFrom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:textSize="14sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvDetailFragmentAirportName"/>
 
-                <RelativeLayout
-                    android:id="@+id/map_layout"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginTop="16dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvDetailFragmentAirportPos">
-
-                    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-                              xmlns:tools="http://schemas.android.com/tools"
-                              android:id="@+id/mapAirportLocation"
-                              android:name="com.google.android.gms.maps.SupportMapFragment"
-                              android:layout_width="match_parent"
-                              android:layout_height="match_parent"
-                              tools:context="pos.jgeraldo.com.openflightsandroidsample.ui.fragments.AirportDetailFragment"/>
-
-                    <ImageView
-                        android:id="@+id/mapHandlerImage"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:src="@android:color/transparent"/>
-
-                </RelativeLayout>
-
-                <TextView
-                    android:id="@+id/tvDetailFragmentAirportName"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="58dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="58dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:text="@{airport.completeName}"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"/>
-
-                <TextView
-                    android:id="@+id/tvDetailFragmentAirportFrom"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:textSize="14sp"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvDetailFragmentAirportName"/>
-
-                <TextView
-                    android:id="@+id/tvDetailFragmentAirportPos"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:text="@{String.format(@string/airport_position_label_format, airport.latitude, airport.longitude)}"
-                    android:textColor="@color/divider"
-                    android:textSize="14sp"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvDetailFragmentAirportFrom"/>
-
-            </android.support.constraint.ConstraintLayout>
-        </android.support.v4.widget.NestedScrollView>
+        <TextView
+            android:id="@+id/tvDetailFragmentAirportPos"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:gravity="start|left"
+            android:text="@{String.format(@string/airport_position_label_format, airport.latitude, airport.longitude)}"
+            android:textColor="@color/divider"
+            android:textSize="14sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/fab"
+            app:layout_constraintTop_toBottomOf="@+id/tvDetailFragmentAirportFrom"
+            app:layout_constraintHorizontal_bias="0.514"/>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/fab_margin"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="8dp"
             android:tint="@android:color/white"
-            app:layout_anchor="@+id/app_bar"
-            app:layout_anchorGravity="bottom|end"
+            app:layout_anchorGravity="top|end"
+            app:layout_constraintBottom_toBottomOf="@+id/mapAirportLocation"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvDetailFragmentAirportName"
+            app:layout_constraintVertical_bias="0.043"
             app:srcCompat="@drawable/ic_not_favorite"/>
-    </android.support.design.widget.CoordinatorLayout>
+    </android.support.constraint.ConstraintLayout>
+
 
 </layout>

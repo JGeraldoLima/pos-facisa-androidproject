@@ -191,33 +191,6 @@ public class AirportDetailFragment extends Fragment implements OnMapReadyCallbac
     private void setUpMap() {
         mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapAirportLocation);
         mapFragment.getMapAsync(this);
-
-        binding.mapHandlerImage.setOnTouchListener(new View.OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                int action = event.getAction();
-                switch (action) {
-                    case MotionEvent.ACTION_DOWN:
-                        // Disallow ScrollView to intercept touch events.
-                        binding.airportDetailNestedScroll.requestDisallowInterceptTouchEvent(true);
-                        // Disable touch on transparent view
-                        return false;
-
-                    case MotionEvent.ACTION_UP:
-                        // Allow ScrollView to intercept touch events.
-                        binding.airportDetailNestedScroll.requestDisallowInterceptTouchEvent(false);
-                        return true;
-
-                    case MotionEvent.ACTION_MOVE:
-                        binding.airportDetailNestedScroll.requestDisallowInterceptTouchEvent(true);
-                        return false;
-
-                    default:
-                        return true;
-                }
-            }
-        });
     }
 
     @Override
