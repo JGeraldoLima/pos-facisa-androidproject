@@ -7,13 +7,19 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.ShareActionProvider;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,13 +54,15 @@ public class AirportDetailFragment extends Fragment implements OnMapReadyCallbac
 
     private SupportMapFragment mapFragment;
 
-    AirportDetailFragmentBinding binding;
+    private AirportDetailFragmentBinding binding;
 
-    IAirportDao airportDao;
+    private IAirportDao airportDao;
 
-    Airport mAirport;
+    private Airport mAirport;
 
-    GoogleMap mMap;
+    private GoogleMap mMap;
+
+    private ShareActionProvider shareActionProvider;
 
     public AirportDetailFragment() {
         super();
@@ -163,7 +171,8 @@ public class AirportDetailFragment extends Fragment implements OnMapReadyCallbac
 
     private void updateAirportSourceItemState(int airportIndex, boolean state) {
         mAirport.setFavorite(state);
-        /*airportSource*/apiAirports.set(airportIndex, mAirport);
+        /*airportSource*/
+        apiAirports.set(airportIndex, mAirport);
         airportsListAdapter.notifyDataSetChanged();
     }
 
@@ -193,6 +202,17 @@ public class AirportDetailFragment extends Fragment implements OnMapReadyCallbac
         mapFragment.getMapAsync(this);
     }
 
+    private void setShareIntent(Airport a) {
+        String uri = String.format("https://www.google.com.br/maps/@%s,%s,15z", a.getLatitude(), a.getLongitude());
+
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        String shareDescription = String.format(Util.getString(mContext, R.string.share_message), a.getShortName());
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, shareDescription);
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, uri);
+        shareActionProvider.setShareIntent(sharingIntent);
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -212,5 +232,16 @@ public class AirportDetailFragment extends Fragment implements OnMapReadyCallbac
             .icon(myAirportMarkerIcon);
         mMap.addMarker(currentMarkerOptions);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(airportMarkerLocation, 15.5f));
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.airport_detail, menu);
+
+        MenuItem item = menu.findItem(R.id.airport_item_share);
+
+        shareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
+        setShareIntent(mAirport);
     }
 }

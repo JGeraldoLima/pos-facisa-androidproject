@@ -122,5 +122,7 @@
     <string name="no_more_results_to_show">There are no more airports to load!</string>
     <string name="available_network_connection">Internet connection established. Now you can search for airports!</string>
     <string name="unavailable_network_connection">You are out of internet connection. Until you get connected, it will not possible to search airports.</string>
+    <string name="share">Share</string>
+    <string name="share_message">Just found %s airport location, go check it out!</string>
 
 </resources>
