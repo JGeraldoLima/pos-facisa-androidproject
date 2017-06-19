@@ -14,10 +14,13 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import pos.jgeraldo.com.openflightsandroidsample.storage.models.Airport;
 import pos.jgeraldo.com.openflightsandroidsample.storage.preferences.OFASPreferences;
+import retrofit2.Call;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AirportsParser {
 
-    static String baseUrl = "https://openflights.org/php/apsearch.php";
+    static String baseUrl = "https://openflights.org/php/apsearch.php/";
 
     public static List<Airport> searchAirports(Context context)
         throws IOException {
@@ -26,36 +29,20 @@ public class AirportsParser {
         String cityName = OFASPreferences.getCurrentSearchCityName(context);
         String countryName = OFASPreferences.getCurrentSearchCountryName(context);
 
-        RequestBody body = getFormData(context, airportName, cityName, countryName);
-        OkHttpClient client = new OkHttpClient();
-
-        Request request = new Request.Builder()
-            .url(baseUrl)
-            .post(body)
+        Retrofit retrofit = new Retrofit.Builder()
+            .baseUrl(baseUrl)
+            .addConverterFactory(GsonConverterFactory.create())
             .build();
 
-        Response response = client.newCall(request).execute();
+        AirportsRetrofitInterface api = retrofit.create(AirportsRetrofitInterface.class);
 
-        String json = response.body().string();
+        Call<AirportSearchResult> call = api.searchAirports(airportName, cityName, countryName, "", "N", "airports",
+            "false", "SEARCH", OFASPreferences.getCurrentOffsetValue(context) + "");
 
-        Gson gson = new Gson();
-        AirportSearchResult result = gson.fromJson(json, AirportSearchResult.class);
+        AirportSearchResult result = call.execute().body();
+
+        // treat when result == null, throw some exception or something
         OFASPreferences.setCurrentSearchMaxResults(context, result.maxQnty);
         return result.airports;
-    }
-
-    private static RequestBody getFormData(Context context, String airportName, String cityName, String countryName) {
-
-        return new FormBody.Builder()
-            .add("name", airportName)
-            .add("city", cityName)
-            .add("country", countryName)
-            .add("iata", "")
-            .add("dst", "N")
-            .add("db", "airports")
-            .add("iatafilter", "false")
-            .add("action", "SEARCH")
-            .add("offset", OFASPreferences.getCurrentOffsetValue(context) + "")
-            .build();
     }
 }

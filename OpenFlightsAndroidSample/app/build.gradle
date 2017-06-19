@@ -45,7 +45,9 @@ dependencies {
     annotationProcessor "org.parceler:parceler:$version_parceler"
 
     compile "com.google.code.gson:gson:$version_gson"
-    compile "com.squareup.okhttp3:okhttp:$version_okhttp"
+    compile "com.squareup.retrofit2:retrofit:$version_retrofit"
+    compile "com.squareup.retrofit2:converter-gson:$version_retrofit"
+
     compile "com.jakewharton:butterknife:$version_butterknife"
     annotationProcessor "com.jakewharton:butterknife-compiler:$version_butterknife"
     compile "com.github.bumptech.glide:glide:$version_glide"
