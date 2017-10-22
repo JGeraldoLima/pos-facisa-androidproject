@@ -5,6 +5,8 @@
 This repo is only for study purposes. It was used as FACISA Post-degree Android Module Final Project App.
 As REST API, I used [OpenFlights API](https://openflights.org/) for airports search (https://openflights.org/html/apsearch).
 
+It was rated 9.5/10 by the module professor @nglauber.
+
 
 # Required features
 
