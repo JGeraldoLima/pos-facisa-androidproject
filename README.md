@@ -7,6 +7,8 @@ As REST API, I used [OpenFlights API](https://openflights.org/) for airports sea
 
 It was rated 9.5/10 by the module professor @nglauber.
 
+Check out the [demo](https://play.google.com/store/apps/details?id=pos.jgeraldo.com.openflightsandroidsample).
+
 
 # Required features
 
