@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion "26.0.2"
 
     defaultConfig {
         applicationId "pos.jgeraldo.com.openflightsandroidsample"
@@ -22,6 +22,10 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
     }
 }
 
@@ -61,7 +65,16 @@ dependencies {
 
     compile("com.android.support.constraint:constraint-layout:$version_constraint" + ".backup")
 
-    compile 'com.google.android.gms:play-services-maps:10.2.6'
-    compile 'com.android.support:support-v4:25.3.1'
+    compile 'com.google.android.gms:play-services-maps:11.8.0'
+    compile "com.android.support:support-v4:$version_support"
+
+    // Test
     testCompile 'junit:junit:4.12'
+
+    androidTestCompile 'com.android.support.test:runner:1.0.1'
+
+    testImplementation "org.mockito:mockito-core:2.11.0"
+    androidTestImplementation "org.mockito:mockito-android:2.11.0"
+
+    androidTestImplementation 'com.jayway.android.robotium:robotium-solo:5.6.3'
 }
