@@ -29,4 +29,7 @@ public interface IAirportDao {
 
     @Delete
     void deleteAirports(Airport... airports);
+
+    @Query("DELETE FROM Airport")
+    void deleteAll();
 }
