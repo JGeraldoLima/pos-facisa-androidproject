@@ -39,6 +39,7 @@ public class AirportDAOUnitTest {
 
 //    @Test
 //    public void testListAllFavoritesLive() throws Exception {
+      // FIXME: tried everything to make this run, but it keeping failing :(
 //        Airport a = new Airport("BSB", "Aeroporto de Brasilia",
 //            "Aeroporto Internacional de Brasília", "Brasília", "Brasil", "BSB",
 //            "15.8697369", "-47.9172348");
@@ -159,5 +160,26 @@ public class AirportDAOUnitTest {
         assertEquals(1, favorites.size());
 
         airportDao.deleteAll();
+    }
+
+    @Test
+    public void testDeleteAllAirports() throws Exception {
+        Airport a1 = new Airport("BSB", "Aeroporto de Brasilia",
+            "Aeroporto Internacional de Brasília", "Brasília", "Brasil", "BSB",
+            "15.8697369", "-47.9172348");
+
+        Airport a2 = new Airport("MCZ", "Aeroporto de Maceió", "Aeroporto Internacional Zumbi dos Palmares", "Maceió",
+            "Brasil", "MCZ", "-9.5118606", "-35.7931828");
+
+        airportDao.insertAirport(a1);
+        airportDao.insertAirport(a2);
+
+        List<Airport> favorites = airportDao.listAllFavorites();
+        assertEquals(2, favorites.size());
+
+        airportDao.deleteAll();
+        favorites = airportDao.listAllFavorites();
+
+        assertEquals(0, favorites.size());
     }
 }

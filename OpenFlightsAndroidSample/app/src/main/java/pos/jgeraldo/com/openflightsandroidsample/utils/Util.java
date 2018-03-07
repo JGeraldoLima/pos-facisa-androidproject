@@ -40,7 +40,7 @@ public class Util {
         // Snackbar appear animation not working in some devices due to this:
         // https://issuetracker.google.com/issues/37092972
         // And since its animation is hardcoded, it will only possible to reach any animation by implementing
-        // a custom snackbar with a custom view..
+        // a custom snackbar with a custom view...
 
         snackbar.show();
     }
